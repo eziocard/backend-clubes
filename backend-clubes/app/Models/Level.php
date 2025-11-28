@@ -13,9 +13,10 @@ class Level extends Model
     }
 
     public function teacher()
-    {
-        return $this->belongsTo(Teacher::class);
-    }
+{
+    return $this->belongsTo(Teacher::class, 'teacher_rut', 'rut');
+}
+
     
     public function students()
     {

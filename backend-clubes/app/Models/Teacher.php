@@ -9,12 +9,13 @@ class Teacher extends Model
     protected $primaryKey = 'rut';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['rut', 'name', 'lastname','team_id','level_id'];
+    protected $fillable = ['rut', 'name', 'lastname','team_id'];
 
-      public function level()
-    {
-        return $this->belongsTo(Level::class);
-    }
+    public function levels()
+{
+    return $this->hasMany(Level::class, 'teacher_rut', 'rut');
+}
+
     public function team()
     {
         return $this->belongsTo(Team::class);
