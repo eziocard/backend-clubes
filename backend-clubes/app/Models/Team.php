@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
 class Team extends Model
-{
+{   
+    
     protected $fillable = ['name','email','image','password','state'];
      protected $hidden = [
         'password'
