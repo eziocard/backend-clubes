@@ -15,6 +15,8 @@ return new class extends Migration
             $table->string('rut')->primary();
             $table->string('name');
             $table->string('lastname');
+            $table->string('email');
+            $table->string('password');
             $table->foreignId('team_id')->constrained('teams');
             $table->timestamps();
         });
