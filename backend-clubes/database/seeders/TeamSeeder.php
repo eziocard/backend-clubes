@@ -16,8 +16,7 @@ class TeamSeeder extends Seeder
         Team::create([
             'name' => 'tornado',
             'email' => 'tornado@gmail.com',
-            'image' => null,
-            'password' => Hash::make('123456789'), 
+            'image' => null, 
             'state' => true
         ]);
     }

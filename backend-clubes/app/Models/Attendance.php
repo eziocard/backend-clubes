@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
 {
-    protected $fillable = ['student_rut', 'level_id','date', 'present','user_rut'];
+    protected $fillable = ['student_rut', 'level_id','date', 'present','user_id'];
     public function student()
     {
 
@@ -19,6 +19,6 @@ class Attendance extends Model
     }
     public function user()
     {
-        return $this->belongsTo(User::class,'user_rut','rut');
+        return $this->belongsTo(User::class,'user_id','id');
     }
 }

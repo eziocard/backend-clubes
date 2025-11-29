@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Level extends Model
 {
-    protected $fillable = ['name','team_id','user_rut'];
+    protected $fillable = ['name','team_id','user_id'];
     public function team()
     {
         return $this->belongsTo(Team::class);
@@ -14,7 +14,7 @@ class Level extends Model
 
     public function user()
 {
-    return $this->belongsTo(User::class, 'user_rut', 'rut');
+    return $this->belongsTo(User::class, 'user_id', 'id');
 }
 
     

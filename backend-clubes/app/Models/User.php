@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
-
-class User extends Model
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+class User extends Authenticatable
 {
-    use HasApiTokens;
+    use HasApiTokens, Notifiable;
 
-    protected $primaryKey = 'rut';
-    public $incrementing = false; // rut no es autoincremental
-    protected $keyType = 'string';
+ 
 
     protected $fillable = [
         'rut',
@@ -42,6 +41,6 @@ class User extends Model
 
     public function levels()
     {
-        return $this->hasMany(Level::class, 'user_rut', 'rut');
+        return $this->hasMany(Level::class, 'user_id', 'id');
     }
 }

@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('student_rut');
             $table->foreign('student_rut')->references('rut')->on('students');
-            $table->string('user_rut');
-            $table->foreign('user_rut')->references('rut')->on('users');
+            $table->foreignId('user_id')->constrained('users');
             $table->foreignId('level_id')->constrained('levels');
             $table->boolean('present')->default(false);
             $table->dateTime('date');

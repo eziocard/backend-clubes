@@ -2,71 +2,43 @@
 
 return [
 
-   
-
     'defaults' => [
-      
-        'guard' => 'team', 
-        'passwords' => 'teams',
+        'guard' => 'api',
+        'passwords' => 'users',
     ],
-
-
 
     'guards' => [
 
-      
-        'team' => [
+        // Autenticación con Sanctum
+        'api' => [
             'driver' => 'sanctum',
-            'provider' => 'teams',
+            'provider' => 'users',
         ],
 
- 
-        'teacher' => [
-            'driver' => 'sanctum',
-            'provider' => 'teachers',
-        ],
-
-        // Puedes dejar web si quieres usar sesiones (panel admin, etc.)
+        // Por si usas login en panel web
         'web' => [
             'driver' => 'session',
-            'provider' => 'teams', // O puedes crear un provider 'users' si quieres
+            'provider' => 'users',
         ],
     ],
-
 
     'providers' => [
 
-     
-        'teams' => [
+        // Ahora solo existe un provider
+        'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Team::class,
+            'model' => App\Models\User::class,
         ],
-
-       
-        'teachers' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Teacher::class,
-        ],
-
-      
     ],
 
     'passwords' => [
-        'teams' => [
-            'provider' => 'teams',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-
-        'teachers' => [
-            'provider' => 'teachers',
+        'users' => [
+            'provider' => 'users',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],
     ],
-
 
     'password_timeout' => 10800,
 ];

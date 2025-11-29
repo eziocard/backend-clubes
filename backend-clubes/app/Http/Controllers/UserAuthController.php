@@ -37,12 +37,11 @@ class UserAuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'rut'      => 'required',
+            'email'    => 'required|email',
             'password' => 'required'
         ]);
 
-        // Buscar al usuario por su RUT
-        $user = User::where('rut', $request->rut)->first();
+        $user = User::where('email', $request->email)->first();
 
         if (!$user || !password_verify($request->password, $user->password)) {
             return response()->json([
