@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('levels', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-             $table->string('teacher_rut');
-            $table->foreign('teacher_rut')->references('rut')->on('teachers');
+             $table->string('user_rut');
+            $table->foreign('user_rut')->references('rut')->on('users');
             $table->foreignId('team_id')->constrained('teams');
             $table->timestamps();
         });

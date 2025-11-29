@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('teams', function (Blueprint $table) {
-            $table->id();
+        Schema::create('users', function (Blueprint $table) {
+            $table->string('rut')->primary();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('image')->nullable();
+            $table->string('lastname');
+            $table->string('email');
             $table->string('password');
-            $table->boolean('state')->default(false);
+            $table->foreignId('team_id')->nullable()->constrained('teams');
+            $table->enum('role', ['superuser', 'teacher', 'team_admin'])->default('teacher');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('teams');
+        Schema::dropIfExists('users');
     }
 };

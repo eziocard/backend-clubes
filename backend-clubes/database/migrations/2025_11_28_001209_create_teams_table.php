@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('teachers', function (Blueprint $table) {
-            $table->string('rut')->primary();
+        Schema::create('teams', function (Blueprint $table) {
+            $table->id();
             $table->string('name');
-            $table->string('lastname');
-            $table->string('email');
-            $table->string('password');
-            $table->foreignId('team_id')->constrained('teams');
+            $table->string('email')->unique();
+            $table->string('image')->nullable();
+            $table->boolean('state')->default(false);
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('teachers');
+        Schema::dropIfExists('teams');
     }
 };

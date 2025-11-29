@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
 {
-    protected $fillable = ['student_rut', 'level_id', 'present'];
-      public function student()
+    protected $fillable = ['student_rut', 'level_id','date', 'present','user_rut'];
+    public function student()
     {
 
         return $this->belongsTo(Student::class, 'student_rut', 'rut');
@@ -16,5 +16,9 @@ class Attendance extends Model
     public function level()
     {
         return $this->belongsTo(Level::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_rut','rut');
     }
 }

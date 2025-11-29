@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Level extends Model
 {
-    protected $fillable = ['name','team_id','teacher_rut'];
+    protected $fillable = ['name','team_id','user_rut'];
     public function team()
     {
         return $this->belongsTo(Team::class);
     }
 
-    public function teacher()
+    public function user()
 {
-    return $this->belongsTo(Teacher::class, 'teacher_rut', 'rut');
+    return $this->belongsTo(User::class, 'user_rut', 'rut');
 }
 
     
