@@ -61,9 +61,7 @@ class AttendanceController extends Controller
         ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+   
     public function destroy(string $id)
     {
         $attendance = Attendance::findOrFail($id);

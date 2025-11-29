@@ -13,6 +13,7 @@ Route::prefix('user')->group(function () {
     Route::post('/register', [UserAuthController::class, 'register']);
     Route::post('/login', [UserAuthController::class, 'login']);
 
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/profile', [UserAuthController::class, 'profile']);
         Route::post('/logout', [UserAuthController::class, 'logout']);
@@ -24,7 +25,7 @@ Route::get('/levels', [LevelController::class, 'index']);
 Route::get('/students', [StudentController::class, 'index']);  
 
 
-Route::middleware(['auth:sanctum', RoleMiddleware::class])->group(function () {
+Route::middleware(['auth:sanctum', 'role:superuser,team_admin'])->group(function () {
     Route::post('/teams', [TeamController::class, 'store']);
     Route::put('/teams/{id}', [TeamController::class, 'update']);
     Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
@@ -39,8 +40,8 @@ Route::middleware(['auth:sanctum', RoleMiddleware::class])->group(function () {
     Route::delete('/students/{id}', [StudentController::class, 'destroy']);
 
 
-    Route::post('/attendances', [attendancesController::class, 'store']);
-    Route::put('/attendances/{id}', [attendancesController::class, 'update']);
-    Route::delete('/attendances/{id}', [attendancesController::class, 'destroy']);
+    Route::post('/attendances', [AttendanceController::class, 'store']);
+    Route::put('/attendances/{id}', [AttendanceController::class, 'update']);
+    Route::delete('/attendances/{id}', [AttendanceController::class, 'destroy']);
 
 });
