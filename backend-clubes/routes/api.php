@@ -7,6 +7,7 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserAuthController;
+use App\Http\Controllers\AttendanceController;
 
 Route::prefix('user')->group(function () {
     Route::post('/register', [UserAuthController::class, 'register']);
@@ -36,5 +37,10 @@ Route::middleware(['auth:sanctum', RoleMiddleware::class])->group(function () {
     Route::post('/students', [StudentController::class, 'store']);
     Route::put('/students/{id}', [StudentController::class, 'update']);
     Route::delete('/students/{id}', [StudentController::class, 'destroy']);
+
+
+    Route::post('/attendances', [attendancesController::class, 'store']);
+    Route::put('/attendances/{id}', [attendancesController::class, 'update']);
+    Route::delete('/attendances/{id}', [attendancesController::class, 'destroy']);
 
 });
