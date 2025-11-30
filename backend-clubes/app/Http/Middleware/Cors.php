@@ -8,14 +8,22 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Cors
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle($request, Closure $next)
     {
+        // Respuesta a preflight OPTIONS
+        if ($request->isMethod('OPTIONS')) {
+            return response('', 200)
+                ->header('Access-Control-Allow-Origin', '*') // o tu dominio http://localhost:5173
+                ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+                ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        }
+
         $response = $next($request);
 
-        $response->header('Access-Control-Allow-Origin', '*');
-        $response->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization');
-
-        return $response;
+        // Headers CORS para todas las respuestas
+        return $response
+            ->header('Access-Control-Allow-Origin', '*') // o tu dominio http://localhost:5173
+            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     }
 }
