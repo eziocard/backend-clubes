@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Team extends Model
 {   
     
-    protected $fillable = ['name','email','image','state'];
+    protected $fillable = ['name','email','state'];
 
     
     public function levels()

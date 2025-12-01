@@ -18,7 +18,6 @@ class TeamController extends Controller
         $validated = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email',
-            'image' => 'nullable|string',
             'state' => 'required|boolean',
         ]);
         $team = Team::create($validated);
@@ -55,7 +54,6 @@ class TeamController extends Controller
     $validated = $request->validate([
         'name'=> 'required|string|max:255|unique:teams,name,' . $id,
         'email'=> 'required|email|unique:teams,email,' . $id,
-        'image'=> 'nullable|string',
         'state'=> 'boolean'
     ]);
 
