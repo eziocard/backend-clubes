@@ -2,45 +2,63 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\HasApiTokens;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-class User extends Authenticatable
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, Notifiable;
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable;
 
- 
-
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
     protected $fillable = [
         'rut',
-        'name',
-        'lastname',
-        'email',
-        'password',
-        'team_id',
-        'role'
+    'name',
+    'lastname',
+    'email',
+    'password',
+    'team_id',
+    'role'
     ];
 
-    protected $hidden = ['password'];
 
-    
-    public function setPasswordAttribute($value)
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
     {
-        if ($value !== null) {
-            $this->attributes['password'] = Hash::make($value);
-        }
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 
-    // Relación: un usuario puede pertenecer a un equipo
-    public function team()
+    public function getJWTIdentifier()
     {
-        return $this->belongsTo(Team::class);
+        return $this->getKey();
     }
 
-    public function levels()
+    public function getJWTCustomClaims()
     {
-        return $this->hasMany(Level::class, 'user_id', 'id');
+        return [];
     }
 }

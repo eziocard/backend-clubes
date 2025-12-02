@@ -1,74 +1,62 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Attendance;
+
 use Illuminate\Http\Request;
+use App\Models\Attendance;
+use App\Models\Student;
+use Illuminate\Support\Facades\Validator;
 
 class AttendanceController extends Controller
 {
-    
-    public function index()
+    // Listar asistencias
+    public function index(Request $request)
     {
-        $attendances = Attendance::all();
+        $user = auth('api')->user();
+
+        $query = Attendance::with(['student', 'level', 'user']);
+
+        // Si es teacher, solo su nivel
+        if ($user->role === 'teacher') {
+            $query->where('user_id', $user->id);
+        }
+
+        // Si es team, solo estudiantes de su team
+        if ($user->role === 'team') {
+            $query->whereHas('student', function($q) use ($user) {
+                $q->where('team_id', $user->team_id);
+            });
+        }
+
+        $attendances = $query->orderBy('date', 'desc')->get();
+
         return response()->json($attendances, 200);
     }
 
-    
+    // Registrar asistencia
     public function store(Request $request)
     {
-         $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'student_rut' => 'required|exists:students,rut',
-            'level_id'    => 'required|exists:levels,id',
-            'date'        => 'required|date',
-            'present'     => 'required|boolean',
-            'user_id'     => 'required|exists:users,id'
+            'level_id' => 'required|exists:levels,id',
+            'present' => 'required|boolean',
+            'date' => 'required|date',
         ]);
 
-        $attendance = Attendance::create($validated);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
 
-        return response()->json([
-            'message' => 'Asistencia registrada correctamente',
-            'attendance' => $attendance
-        ], 201);
-    }
+        $user = auth('api')->user();
 
-   
-    public function show(string $id)
-    {
-        $attendance = Attendance::findOrFail($id);
-        return response()->json($attendance, 200);
-    }
-
-    
-   
-    public function update(Request $request, string $id)
-    {
-         $attendance = Attendance::findOrFail($id);
-
-        $validated = $request->validate([
-            'student_rut' => 'sometimes|required|exists:students,rut',
-            'level_id'    => 'sometimes|required|exists:levels,id',
-            'date'        => 'sometimes|required|date',
-            'present'     => 'sometimes|required|boolean',
-            'user_id'     => 'sometimes|required|exists:users,id'
+        $attendance = Attendance::create([
+            'student_rut' => $request->student_rut,
+            'user_id' => $user->id,
+            'level_id' => $request->level_id,
+            'present' => $request->present,
+            'date' => $request->date,
         ]);
 
-        $attendance->update($validated);
-
-        return response()->json([
-            'message' => 'Asistencia actualizada correctamente',
-            'attendance' => $attendance
-        ], 200);
-    }
-
-   
-    public function destroy(string $id)
-    {
-        $attendance = Attendance::findOrFail($id);
-        $attendance->delete();
-
-        return response()->json([
-            'message' => 'Asistencia eliminada correctamente'
-        ], 200);
+        return response()->json(['message' => 'Asistencia registrada', 'attendance' => $attendance], 201);
     }
 }

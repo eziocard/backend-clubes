@@ -1,4 +1,7 @@
 <?php
+
+use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\IsUserAuth;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -10,27 +13,15 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        // Alias para roles
-        $middleware->alias([
-            'role' => \App\Http\Middleware\RoleMiddleware::class,
-            'cors.custom' => \App\Http\Middleware\Cors::class,
-        ]);
-        
-        // Opcional: registrar CORS como global
-        $middleware->append(\App\Http\Middleware\Cors::class);
-        
-        // ✅ AGREGA ESTO - Deshabilita redirección para APIs
-        $middleware->redirectGuestsTo(function ($request) {
-            // Si la petición espera JSON (API), no redirigir
-            if ($request->expectsJson() || $request->is('api/*')) {
-                return null;
-            }
-            // Solo redirigir si hay una ruta 'login' definida
-            return null; // O return route('login') si tienes esa ruta
-        });
-    })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withMiddleware(function (Middleware $middleware) {
+    $middleware->alias([
+        'isUserAuth' => \App\Http\Middleware\IsUserAuth::class,
+        'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+        'IsTeamOrIsAdmin' => \App\Http\Middleware\IsTeamOrIsAdmin::class,
+        'cors' => \App\Http\Middleware\CorsMiddleware::class,
+    ]);
+})
+
+    ->withExceptions(function (Exceptions $exceptions) {
         //
-    })
-    ->create();
+    })->create();

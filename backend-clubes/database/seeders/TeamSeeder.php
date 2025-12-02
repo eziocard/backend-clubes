@@ -16,7 +16,21 @@ class TeamSeeder extends Seeder
         Team::create([
             'name' => 'tornado',
             'email' => 'tornado@gmail.com',
-            'image' => null, 
+            'state' => true
+        ]);
+        Team::create([
+            'name' => 'Gimnasia',
+            'email' => 'Gimnasia@gmail.com',
+            'state' => true
+        ]);
+        Team::create([
+            'name' => 'cheerTemuco',
+            'email' => 'cheerTemuco@gmail.com',
+            'state' => true
+        ]);
+        Team::create([
+            'name' => 'vikings',
+            'email' => 'vikings@gmail.com',
             'state' => true
         ]);
     }

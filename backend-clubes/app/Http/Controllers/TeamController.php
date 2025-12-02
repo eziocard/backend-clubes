@@ -1,66 +1,89 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Team;
+use App\Models\Team; 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TeamController extends Controller
 {
+    
     public function index()
     {
-        $team = Team::all();
-        return response()->json($team,200);
+        $teams = Team::all();
+        if($teams->isEmpty()){
+            return response()->json(['message' => 'No Teams found'],404);
+        }
+        return response()->json($teams,200);
     }
 
-  
+   
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name'=> 'required|string|max:255|unique:teams',
-            'email'=> 'required|email|unique:teams',
-            'image'=> 'nullable|string',
-            'state'=>'boolean'
-
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'state' => 'required|boolean',
         ]);
-        $team = Team::create($validated);
-        return response()->json($team,201);
+        if($validator->fails()){
+            return response()->json(['error' => $validator->errors()],422);
+        }
+        Team::create([
+            'name'=>$request->get('name'),
+            'email'=>$request->get('email'),
+            'state'=>$request->get('state'),
+        ]);
+        return response()->json(['message' => 'Team added successfully'],201);
     }
 
-    public function show(string $id)
+
+  
+    public function edit(string $id)
     {
-        $team = Team::find($id);
-
-        if (!$team) {
-            return response()->json(['message' => 'Equipo no encontrado'], 404);
+        $teams = Team::find($id);
+        if(!$teams){
+            return response()->json(['message'=>'Team not found'],404);
         }
-
-        return $team;
+        return response()->json($teams,200);
     }
 
     
+    public function update(Request $request, string $id)
+    {
+        $teams = Team::find($id);
+        if(!$teams){
+            return response()->json(['message'=>'Team not found'],404);
+        }
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'state' => 'required|boolean',
+        ]);
+        if($validator->fails()){
+            return response()->json(['error' => $validator->errors()],422);
+        }
 
-   public function update(Request $request, string $id)
-{
-    $team = Team::findOrFail($id); 
+        if($request->has('name')){
+            $teams->name = $request->name;
+        }
+        if($request->has('email')){
+            $teams->email = $request->email;
+        }
+        if($request->has('state')){
+            $teams->state = $request->state;
+        }
 
-    $validated = $request->validate([
-        'name'=> 'required|string|max:255|unique:teams,name,' . $id,
-        'email'=> 'required|email|unique:teams,email,' . $id,
-        'image'=> 'nullable|string',
-        'state'=> 'boolean'
-    ]);
-
-    $team->update($validated);
-
-    return response()->json($team);
-}
+        $teams->update();
+        return response()->json(['message'=>'Team updated successfully'],200);
+    }
 
    
     public function destroy(string $id)
     {
-   
-        $team = Team::findOrFail($id);
-        $team->delete();
-        return response()->json(['message'=>'Equipo eliminado correctamente']);
+        $teams = Team::find($id);
+        if(!$teams){
+            return response()->json(['message'=>'Team not found'],404);
+        }
+        $teams->delete();
     }
 }

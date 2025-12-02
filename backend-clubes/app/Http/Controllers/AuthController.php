@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
+class AuthController extends Controller
+{
+   public function register(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'rut'       => 'required|string|unique:users,rut',
+        'name'      => 'required|string|max:255',
+        'lastname'  => 'required|string|max:255',
+        'email'     => 'required|email|unique:users,email',
+        'password'  => 'required|string|min:2',
+        'team_id'   => 'nullable|exists:teams,id',
+        'role'      => 'required|in:superuser,teacher,team',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()], 422);
+    }
+
+    $user = User::create([
+        'rut'       => $request->get('rut'),
+        'name'      => $request->get('name'),
+        'lastname'  => $request->get('lastname'),
+        'email'     => $request->get('email'),
+        'password'  => bcrypt($request->get('password')),
+        'team_id'   => $request->get('team_id'), 
+        'role'      => $request->get('role'),
+    ]);
+
+    return response()->json([
+        'message' => 'User created successfully',
+        'user' => $user
+    ], 201);
+}
+
+
+    public function login(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|min:2|max:50',
+            'password' => 'required|string|min:2',
+
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+        $credentials = $request->only(['email', 'password']);
+
+
+        try {
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'Invalid credentials'], 401);
+            }
+            return response()->json(['token' => $token], 200);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Could not create token', $e], 500);
+
+        }
+
+    }
+
+    public function getUser(){
+        $user = Auth::user();
+        return response()->json($user, 200);
+    }
+
+    public function logout(){
+        JWTAuth::invalidate(JWTAuth::getToken());
+        return response()->json(['message' => 'Logged out successfully'], 200);
+
+    }
+
+    
+}

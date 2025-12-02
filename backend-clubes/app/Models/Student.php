@@ -13,7 +13,7 @@ class Student extends Model
     
     public function level()
     {
-        return $this->belongsTo(Level::class);
+        return $this->hasMany(Level::class);
     }
     public function team()
     {
