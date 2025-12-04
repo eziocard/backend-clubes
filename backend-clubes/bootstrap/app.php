@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+
     $middleware->alias([
         'isUserAuth' => \App\Http\Middleware\IsUserAuth::class,
         'isAdmin' => \App\Http\Middleware\IsAdmin::class,
@@ -21,6 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
         'cors' => \App\Http\Middleware\CorsMiddleware::class,
     ]);
 })
+
+
 
     ->withExceptions(function (Exceptions $exceptions) {
         //
