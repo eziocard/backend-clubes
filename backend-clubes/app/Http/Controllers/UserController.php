@@ -99,7 +99,7 @@ class UserController extends Controller
         $targetUser = User::where('rut', $rut)->first();
 
         if (!$targetUser) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json(['message' => 'usuario no encontrado'], 404);
         }
 
         if ($user->role === 'superuser') {
@@ -124,7 +124,7 @@ class UserController extends Controller
         $targetUser = User::where('rut', $rut)->first();
 
         if (!$targetUser) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json(['message' => 'usuario no encontrado'], 404);
         }
 
    
@@ -218,7 +218,7 @@ class UserController extends Controller
         $targetUser = User::where('rut', $rut)->first();
 
         if (!$targetUser) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json(['message' => 'usuario no encontrado'], 404);
         }
 
      
@@ -243,6 +243,6 @@ class UserController extends Controller
 
         $targetUser->delete();
 
-        return response()->json(['message' => 'User deleted successfully'], 200);
+        return response()->json(['message' => 'Usuario eliminado correctamente'], 200);
     }
 }

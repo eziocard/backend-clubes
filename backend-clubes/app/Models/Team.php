@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Student;
+use App\Models\Level;
 use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model

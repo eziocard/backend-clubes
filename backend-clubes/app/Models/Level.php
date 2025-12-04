@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\User;
+use App\Models\Team;
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Model;
 
 class Level extends Model
@@ -18,5 +20,9 @@ class Level extends Model
     public function team()
     {
         return $this->belongsTo(Team::class);
+    }
+     public function students()
+    {
+        return $this->hasMany(Student::class, 'level_id', 'id');
     }
 }

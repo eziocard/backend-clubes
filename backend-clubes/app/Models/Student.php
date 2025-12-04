@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Student;
+use App\Models\Team;
 use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
@@ -13,7 +14,7 @@ class Student extends Model
     
     public function level()
     {
-        return $this->hasMany(Level::class);
+        return $this->belongsTo(Level::class);
     }
     public function team()
     {

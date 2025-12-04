@@ -39,7 +39,12 @@ Route::middleware([IsUserAuth::class])->group(function () {
             Route::put('students/{rut}', 'update');
             Route::delete('students/{rut}', 'destroy');
             Route::delete('students/{rut}', 'destroy');
+
             Route::post('levels', [LevelController::class,'store']);
+            Route::post('/levels', [LevelController::class, 'store']);
+            Route::get('/levels/{id}/edit', [LevelController::class, 'edit']);
+            Route::put('/levels/{id}', [LevelController::class, 'update']);
+            Route::delete('/levels/{id}', [LevelController::class, 'destroy']);
 
             Route::get('/users', [UserController::class, 'index']);
             Route::get('/users/search', [UserController::class, 'search']);

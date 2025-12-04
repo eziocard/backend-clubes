@@ -82,7 +82,7 @@ class StudentController extends Controller
             'rut','name','lastname','age','level_id','team_id'
         ]));
 
-        return response()->json(['message' => 'Student created'], 201);
+        return response()->json(['message' => 'Estudiante creado'], 201);
     }
 
 
@@ -92,7 +92,7 @@ class StudentController extends Controller
         $student = Student::find($rut);
 
         if (!$student) {
-            return response()->json(['message' => 'Student not found'], 404);
+            return response()->json(['message' => 'Estudiante no encontrado'], 404);
         }
 
        
@@ -119,7 +119,7 @@ class StudentController extends Controller
         $student = Student::find($rut);
 
         if (!$student) {
-            return response()->json(['message' => 'Student not found'], 404);
+            return response()->json(['message' => 'Estudiante no encontrado'], 404);
         }
 
       
@@ -152,7 +152,7 @@ class StudentController extends Controller
             'name','lastname','age','level_id','team_id'
         ]));
 
-        return response()->json(['message' => 'Student updated'], 200);
+        return response()->json(['message' => 'Estudiante actualizado'], 200);
     }
 
 
@@ -187,7 +187,7 @@ class StudentController extends Controller
         $student = Student::find($rut);
 
         if (!$student) {
-            return response()->json(['message' => 'Student not found'], 404);
+            return response()->json(['message' => 'Estudiante no encontrado'], 404);
         }
 
         if ($user->role === 'team' && $student->team_id != $user->team_id) {
@@ -205,6 +205,6 @@ class StudentController extends Controller
 
         $student->delete();
 
-        return response()->json(['message' => 'Student deleted'], 200);
+        return response()->json(['message' => 'Estudiante eliminado'], 200);
     }
 }

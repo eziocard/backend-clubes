@@ -33,7 +33,7 @@ class TeamController extends Controller
             'email'=>$request->get('email'),
             'state'=>$request->get('state'),
         ]);
-        return response()->json(['message' => 'Team added successfully'],201);
+        return response()->json(['message' => 'Club añadido correctamente'],201);
     }
 
 
@@ -42,7 +42,7 @@ class TeamController extends Controller
     {
         $teams = Team::find($id);
         if(!$teams){
-            return response()->json(['message'=>'Team not found'],404);
+            return response()->json(['message'=>'club no encontrado'],404);
         }
         return response()->json($teams,200);
     }
@@ -52,7 +52,7 @@ class TeamController extends Controller
     {
         $teams = Team::find($id);
         if(!$teams){
-            return response()->json(['message'=>'Team not found'],404);
+            return response()->json(['message'=>'club no encontrado'],404);
         }
         $validator = Validator::make($request->all(),[
             'name' => 'required|string',
@@ -74,7 +74,7 @@ class TeamController extends Controller
         }
 
         $teams->update();
-        return response()->json(['message'=>'Team updated successfully'],200);
+        return response()->json(['message'=>'club actualizado correctamente'],200);
     }
 
    
@@ -82,7 +82,7 @@ class TeamController extends Controller
     {
         $teams = Team::find($id);
         if(!$teams){
-            return response()->json(['message'=>'Team not found'],404);
+            return response()->json(['message'=>'club no encontrado'],404);
         }
         $teams->delete();
     }

@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Level;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+
 class LevelController extends Controller
-
-
 {
+  
     public function index(Request $request)
     {
         $user = auth('api')->user();
@@ -17,17 +17,14 @@ class LevelController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-      
         if ($user->role === 'superuser') {
-            $levels = Level::select('id', 'name')->get();
+            $levels = Level::select('id', 'name', 'user_id', 'team_id')->get();
         } 
-      
         else if ($user->role === 'team') {
             $levels = Level::where('team_id', $user->team_id)
-                           ->select('id', 'name')
+                           ->select('id', 'name', 'user_id', 'team_id')
                            ->get();
         } 
-  
         else {
             return response()->json([], 403);
         }
@@ -35,63 +32,85 @@ class LevelController extends Controller
         return response()->json($levels, 200);
     }
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|min:1|max:100',
             'user_id' => 'required|numeric',
             'team_id' => 'required|numeric'
         ]);
-        if($validator->fails()){
+
+        if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
+
         Level::create([
-            'name'=>$request->get('name'),
-            'user_id'=>$request->get('user_id'),
-            'team_id'=>$request->get('team_id'),
+            'name' => $request->name,
+            'user_id' => $request->user_id,
+            'team_id' => $request->team_id,
         ]);
-        return response()->json(['message' => 'Level added successfully'], 201);
+
+        return response()->json(['message' => 'Nivel añadido correctamente'], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Level $level)
+
+    public function edit(string $id)
     {
-        //
+        $level = Level::find($id);
+
+        if (!$level) {
+            return response()->json(['message' => 'Nivel no encontrado'], 404);
+        }
+
+        return response()->json($level, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Level $level)
+    public function update(Request $request, string $id)
     {
-        //
+        $level = Level::find($id);
+
+        if (!$level) {
+            return response()->json(['message' => 'Nivel no encontrado'], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|min:1|max:100',
+            'user_id' => 'required|numeric',
+            'team_id' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        $level->name = $request->name;
+        $level->user_id = $request->user_id;
+        $level->team_id = $request->team_id;
+
+        $level->save();
+
+        return response()->json(['message' => 'Nivel actualizado correctamente'], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Level $level)
+    public function destroy($id)
     {
-        //
-    }
+        $level = Level::find($id);
 
+        if (!$level) {
+            return response()->json(['message' => 'Nivel no encontrado'], 404);
+        }
+
+      
+        if ($level->students()->count() > 0) {
+            return response()->json([
+                'message' => 'No se puede eliminar el nivel porque tiene estudiantes asociados.'
+            ], 409);
+        }
+
+        $level->delete();
+
+        return response()->json([
+            'message' => 'Nivel eliminado correctamente'
+        ], 200);
+    }
 }
